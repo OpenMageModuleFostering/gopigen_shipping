@@ -33,9 +33,10 @@ class Codilar_Gopigen_Adminhtml_GopigenController extends Mage_Adminhtml_Control
                     }elseif(!$res['orders_data'][0]['success']){
                         $msg = $res['orders_data'][0]['msg'];
                         break;
+                    }elseif($res['orders_data'][0]['awb']){
+                        $awb = $res['orders_data'][0]['awb'];
+                        $data[0]['awb'] = $awb;
                     }
-                    $awb = $res['orders_data'][0]['awb'];
-                    $data[0]['awb'] = $awb;
                 }while(!$awb);
                 if($awb){
                     Mage::getModel('codilar_gopigen/track')->saveTrack($res['orders_data'][0]);

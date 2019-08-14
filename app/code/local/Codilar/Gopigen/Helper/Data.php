@@ -26,7 +26,7 @@ class Codilar_Gopigen_Helper_Data extends Mage_Core_Helper_Abstract {
 	}
 	protected function _isTestMode()
 	{
-		return $this->_getStoreConfig(self::XML_PATH_ENABLED);
+		return $this->_getStoreConfig(self::XML_PATH_TEST);
 	}
 	protected function getPassword()
 	{
@@ -34,7 +34,7 @@ class Codilar_Gopigen_Helper_Data extends Mage_Core_Helper_Abstract {
 	}
 	public function getApiUrl()
 	{
-		if(!$this->_isTestMode())
+		if($this->_isTestMode())
 			return self::API_TEST_URL;
 		else
 			return self::API_URL;
@@ -74,8 +74,8 @@ class Codilar_Gopigen_Helper_Data extends Mage_Core_Helper_Abstract {
 						'Content-Length: ' . strlen($data_string))
 		);
 		$responses = curl_exec($ch);
-		curl_close($ch);
 		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
 		$result=json_decode($responses,true);
 		return $result;
 	}

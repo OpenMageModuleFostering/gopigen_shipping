@@ -7,8 +7,8 @@
  * @purpose     Magento controller for tracking
  * @author      Codilar Team
  **/
-class Codilar_Gopigen_TrackController extends Mage_Core_Controller_Front_Action {
-    public function indexAction(){
+class Codilar_Gopigen_ShipController extends Mage_Core_Controller_Front_Action {
+    public function trackAction(){
         $_id = $this->getRequest()->getParam('id');
         if(!$_id)
            $this->_redirect('');

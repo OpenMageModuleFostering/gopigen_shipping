@@ -79,7 +79,7 @@ class Codilar_Gopigen_Model_Carrier
     public function getTrackingInfo($tracking)
     {
         $track = Mage::getModel('shipping/tracking_result_status');
-        $_baseUrl = Mage::getUrl('gopigen/track/index/');
+        $_baseUrl = Mage::getUrl('gopigen/ship/track/');
         $track->setUrl($_baseUrl . 'id/' . $tracking)
             ->setTracking($tracking)
             ->setCarrierTitle($this->getConfigData('name'));
