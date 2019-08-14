@@ -34,14 +34,17 @@ class Codilar_Gopigen_Model_Carrier
         }
         /** @var Mage_Shipping_Model_Rate_Result $result */
         $result = Mage::getModel('shipping/rate_result');
+        $quote = Mage::getModel('checkout/session')->getQuote();
+        $quoteData = $quote->getData();
+        $grandTotal = $quoteData['grand_total'];
         foreach ($request->getAllItems() as $item) {
             $this->_goweight += $item->getWeight();
         }
         $ship_request = array(
             "to_pin_code" => $request->getDestPostcode(),
             "payment_type" =>  "cod",
-            "weight" => "$this->_goweight",
-            "cod_amount" => $request->getOrderSubtotal(),
+            "weight" => $this->_goweight?$this->_goweight:1,
+            "cod_amount" => $request->getOrderSubtotal()?$request->getOrderSubtotal():$grandTotal,
             "from_pin_code" => Mage::getStoreConfig('shipping/origin/postcode'),
             "from_city" => Mage::getStoreConfig('shipping/origin/city')
         );

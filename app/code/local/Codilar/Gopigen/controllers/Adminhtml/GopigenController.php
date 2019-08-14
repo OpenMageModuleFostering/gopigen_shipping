@@ -10,13 +10,19 @@
 
 class Codilar_Gopigen_Adminhtml_GopigenController extends Mage_Adminhtml_Controller_Action {
 
+    protected function _isAllowed()
+    {
+        return true;
+    }
+
     /*
      * Function to get AWB number from API
      */
     public function getAWBAction(){
         $msg = '';
         $post = $this->getRequest();
-
+        $awb = NULL;
+        // Notice: Undefined index: awb  in D:\xampp\htdocs\pigen\app\code\local\Codilar\Gopigen\controllers\Adminhtml\GopigenController.php on line 36
         if (empty($post)) {
             $msg = "PinCode is not serviceable by GoPigen.";
         }
@@ -24,21 +30,32 @@ class Codilar_Gopigen_Adminhtml_GopigenController extends Mage_Adminhtml_Control
         {
             $zipcode = $post->getParam('zipcode');
             $orderid = $post->getParam('orderid');
+            $i = 0;
             try{
                 do{
                     $res = Mage::helper('codilar_gopigen')->placeOrder($orderid);
                     if(!$res){
                         $msg = "Some network issue, Please try again later";
                         break;
-                    }elseif(!$res['orders_data'][0]['success']){
+                    }elseif(! array_key_exists('success',$res['orders_data'][0]) ){
                         $msg = $res['orders_data'][0]['msg'];
                         break;
-                    }elseif($res['orders_data'][0]['awb']){
+                    }elseif(array_key_exists('awb',$res['orders_data'][0])){
                         $awb = $res['orders_data'][0]['awb'];
                         $data[0]['awb'] = $awb;
+                    }elseif(array_key_exists('msg',$res['orders_data'][0])){
+                       if($res['orders_data'][0]['msg'] != 'All is Well'){
+                           $awb = $res['orders_data'][0]['msg'];
+                           $data[0]['awb'] = $awb;
+                       }
+                    }
+                    $i++;
+                    if($i>2){
+                      $msg = "Some network issue, Please try again later";
+                      break;
                     }
                 }while(!$awb);
-                if($awb){
+                if(!preg_match_all("/(error|\s)/i", $awb)){
                     Mage::getModel('codilar_gopigen/track')->saveTrack($res['orders_data'][0]);
                 }
             }
@@ -51,7 +68,7 @@ class Codilar_Gopigen_Adminhtml_GopigenController extends Mage_Adminhtml_Control
         {
             $data = array();
             $data[0]['awb'] = $msg;
-            mage::log("AWB Found and sending via ajax with message ".$msg,null,'gopigen.log');
+            Mage::log("Response message ".$msg,null,'gopigen.log');
         }
         $output = array();
         $output['resp'] = $data;

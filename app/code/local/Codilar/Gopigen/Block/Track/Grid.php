@@ -103,10 +103,10 @@ class Codilar_Gopigen_Block_Track_Grid extends Mage_Adminhtml_Block_Widget_Grid 
 
     public function getRowUrl($row)
     {
-       return $this->getUrl('*/*/edit', array('id' => $row->getId()));
+          return '';
     }
 
-        protected function _prepareMassaction()
+    protected function _prepareMassaction()
     {
         $modelPk = Mage::getModel('codilar_gopigen/track')->getResource()->getIdFieldName();
         $this->setMassactionIdField($modelPk);

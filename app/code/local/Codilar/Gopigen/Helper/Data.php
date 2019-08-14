@@ -113,9 +113,11 @@ class Codilar_Gopigen_Helper_Data extends Mage_Core_Helper_Abstract {
 		$length = "10";
 		$breadth = "10";
 		$height = "10";
+		$declaredValue = $order->getGrandTotal();
+		$productDetails = '';
 		if($payment_method_code == 'cashondelivery'){
 			$paymentType = 'cod';
-			$codAmount = $order->getSubtotal();
+			$codAmount = $order->getGrandTotal();
 		}
 		else{
 			$paymentType = 'prepaid';
@@ -124,13 +126,14 @@ class Codilar_Gopigen_Helper_Data extends Mage_Core_Helper_Abstract {
 		$goWeight = 0;
 		foreach ($order->getAllItems() as $item) {
 			$goWeight += $item->getWeight();
+			$productDetails .= $item->getName() . ' - ' . number_format($item->getQtyOrdered()) . ', ';
 		}
 		$uri = "place-order";
 		$data = array();
 		$data["shipment_details"][0] = array(
 				"unique_id" => $order->getIncrementId(),
 				"invoice" => $order->getIncrementId(),
-				"product_detail" => "Default Products",
+				"product_detail" => $productDetails,
 				"from_name" => $this->_getStoreConfig('general/store_information/name'),
 				"from_address" =>  $this->_getStoreConfig('general/store_information/address'),
 				"from_city" =>  $this->_getStoreConfig('shipping/origin/city'),
@@ -143,17 +146,18 @@ class Codilar_Gopigen_Helper_Data extends Mage_Core_Helper_Abstract {
 				"to_city" => $order->getShippingAddress()->getCity(),
 				"to_state" => $order->getShippingAddress()->getRegion(),
 				"to_mobile_number" => $order->getShippingAddress()->getTelephone(),
-				"to_pin_code" => $order->getShippingAddress()->getPostcode(),
+				"to_pin_code" => (int)$order->getShippingAddress()->getPostcode(),
 				"payment_type" => $paymentType,
 				"weight" => $goWeight,
 				"cod_collection" => $codAmount,
-				"declared_value" => $codAmount,
+				"declared_value" => $declaredValue,
 				"declaration" => "I hereby declare that the above mentioned information is true and correct and value declared(value) is for transportation purpose and has no commercial value.Signature:",
 				"length" => $length,
 				"breadth" => $breadth,
 				"height" => $height,
 				"to_email" => $order->getShippingAddress()->getEmail()
 		);
+var_dump($data);
 		return $this->postCall($uri,$data);
 		/* for existing order */
 		/*
