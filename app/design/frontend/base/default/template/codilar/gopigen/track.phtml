@@ -1,0 +1,50 @@
+<?php
+/**
+ * Codilar Technologies Pvt. Ltd.
+ * @category    Gopigen Shipping
+ * @package     Codilar
+ * @copyright   Copyright (c) 2016 Codilar. (http://www.codilar.com)
+ * @purpose     For frontend tracking
+ * @author      Codilar Team
+ **/
+$res = Mage::getModel('core/session')->getData('gopigen');
+?>
+<div class="page-title">
+    <h1>TRACKING INFORMATION</h1>
+</div>
+<?php if($res['error']){ ?>
+    <?php echo $res['error'] ?>
+    <?php } else { ?>
+<h3>Over View</h3>
+<table style="border: solid 1px;">
+    <tr style="border: solid 1px;">
+        <td style="border: solid 1px;width: 175px;">AWB</td>
+        <td style="border: solid 1px;width: 175px;">Date</td>
+        <td style="border: solid 1px;width: 175px;">Status</td>
+    </tr>
+    <tr style="border: solid 1px;">
+        <td style="border: solid 1px;"><?php echo $res['results'][0]['awb']; ?></td>
+        <td style="border: solid 1px;"><?php echo $res['results'][0]['dt']; ?></td>
+        <td style="border: solid 1px;"><?php echo $res['results'][0]['status']; ?></td>
+    </tr>
+</table>
+    <h3>Tracking Details</h3>
+    <?php if($res['results'][0]['details']) { ?>
+    <table style="border: solid 1px;">
+        <tr style="border: solid 1px;">
+            <td style="border: solid 1px;width: 175px;">Time</td>
+            <td style="border: solid 1px;width: 175px;">Status</td>
+            <td style="border: solid 1px;width: 175px;">Description</td>
+        </tr>
+        <?php foreach($res['results'][0]['details'] as $details): ?>
+        <tr style="border: solid 1px;">
+            <td style="border: solid 1px;"><?php echo $details['time']; ?></td>
+            <td style="border: solid 1px;"><?php echo $details['status']; ?></td>
+            <td style="border: solid 1px;"><?php echo $details['desc']; ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+    <?php }else { ?>
+        Tracking details not availiable right now. Please try again later.
+    <?php } ?>
+<?php } ?>
