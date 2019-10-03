@@ -1,7 +1,7 @@
 {
-    "name": "OpenMageModuleFostering\/GoPigen_Shipping",
+    "name": "openmage-module-fostering\/gopigen_shipping",
     "type": "magento-module",
-    "license": "OSL",
+    "license": "OSL-3.0",
     "homepage": "",
     "description": "Gopigeon brings the fastest and the most convenient way to get the business consignments and shipments delivered across the world. It's unique dashboard service and unified tracking system lets businesses place orders and track their shipments at one platform.",
     "authors": [
